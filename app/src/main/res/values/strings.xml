@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Counterweight</string>
+    <string name="tab_scale">Scale</string>
+    <string name="tab_shelves">Shelves</string>
+    <string name="tab_case">Case</string>
+    <string name="tab_ledger">Ledger</string>
+</resources>

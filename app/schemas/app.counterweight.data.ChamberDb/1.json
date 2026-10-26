@@ -1,0 +1,198 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "88da3771cc4a42085a589ebf1a093f5b",
+    "entities": [
+      {
+        "tableName": "stone",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `worry` TEXT, `words` TEXT NOT NULL, `sphere` TEXT NOT NULL, `heft` INTEGER NOT NULL, `at` INTEGER NOT NULL, `after` INTEGER, `shelf` INTEGER, `due` INTEGER, `outcome` TEXT, `checkedAt` INTEGER, `tossed` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "worry",
+            "columnName": "worry",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "words",
+            "columnName": "words",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sphere",
+            "columnName": "sphere",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "heft",
+            "columnName": "heft",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "at",
+            "columnName": "at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "after",
+            "columnName": "after",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "shelf",
+            "columnName": "shelf",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "due",
+            "columnName": "due",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "outcome",
+            "columnName": "outcome",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "checkedAt",
+            "columnName": "checkedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "tossed",
+            "columnName": "tossed",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "laid",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `stone` INTEGER NOT NULL, `weight` TEXT NOT NULL, `at` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stone",
+            "columnName": "stone",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weight",
+            "columnName": "weight",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "at",
+            "columnName": "at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "mark",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`weight` TEXT NOT NULL, `kind` TEXT NOT NULL, `at` INTEGER NOT NULL, PRIMARY KEY(`weight`, `kind`))",
+        "fields": [
+          {
+            "fieldPath": "weight",
+            "columnName": "weight",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kind",
+            "columnName": "kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "at",
+            "columnName": "at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "weight",
+            "kind"
+          ]
+        }
+      },
+      {
+        "tableName": "engraved",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `text` TEXT NOT NULL, `worry` TEXT, `sphere` TEXT, `at` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "worry",
+            "columnName": "worry",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "sphere",
+            "columnName": "sphere",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "at",
+            "columnName": "at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88da3771cc4a42085a589ebf1a093f5b')"
+    ]
+  }
+}

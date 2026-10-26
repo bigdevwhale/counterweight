@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A balance for the status bar: beam, column and two pans. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path android:fillColor="#FFFFFFFF" android:pathData="M11.2,4.5h1.6v15h-1.6z M7,20h10v1.6h-10z M3,6.2h18v1.6h-18z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M12,3.2a1.8,1.8 0,1 0,0.01 0z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M1.5,13.5h7a3.5,2.6 0,0 1,-7 0z M15.5,13.5h7a3.5,2.6 0,0 1,-7 0z" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="1" android:pathData="M3.8,7.5L1.8,13.5M3.8,7.5L8.2,13.5M20.2,7.5L15.8,13.5M20.2,7.5L22.2,13.5" />
+</vector>
