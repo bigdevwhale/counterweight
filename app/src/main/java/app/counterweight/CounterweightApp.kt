@@ -39,9 +39,12 @@ class CounterweightApp : Application() {
         super.onCreate()
         container = AppContainer(this)
         Bell.channel(this)
+        // The demo shows nothing until its history is in place, so the first screen doesn't jump.
+        if (BuildConfig.DEMO) container.repo.hold = true
         container.scope.launch {
             container.catalog
             if (BuildConfig.DEMO) DemoSeed.seedIfEmpty(container)
+            container.repo.hold = false
             container.repo.refresh()
             container.sfx.load()
         }

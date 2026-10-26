@@ -14,6 +14,7 @@ import kotlin.random.Random
 /**
  * The demo build's past: about two months of weighings played through the real engine with a wound-back
  * clock, so the shelves, the case and the ledger look lived in. One stone waits on the shelf, one is due today.
+ * The welcome pages still come first, as on a real first launch.
  */
 object DemoSeed {
     /** What this person worries about most, so a few stones get worn to pebbles. */
@@ -24,10 +25,11 @@ object DemoSeed {
         if (repo.refresh().stones.isNotEmpty()) return
         val cat = c.catalog
         if (cat.worries.isEmpty()) return
+        repo.hold = true
         val ru = c.app.localized().ru
         c.settings.update {
             it.copy(
-                onboarded = true, gender = Gender.HE, salt = 7,
+                salt = 7,
                 props = if (ru) "Аня, которая всегда возьмёт трубку\nЯ умею начинать заново\nРуки и голова\nДрузья в Казани" else "Anna, who always picks up\nI know how to start again\nMy hands and my head\nFriends in Leeds",
             )
         }
@@ -83,6 +85,7 @@ object DemoSeed {
         val w2 = habits.last()
         repo.put(w2.key, "", w2.sphere, 6, shelf = at(today, 18, 0))
         repo.clock = System::currentTimeMillis
+        repo.hold = false
         repo.refresh()
     }
 }

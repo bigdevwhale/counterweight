@@ -55,8 +55,8 @@ class Words(val ru: Boolean, val gender: Gender?) {
 
     /** The weight cast from the person's own record. */
     fun ledger(r: Engine.Record): String = if (ru) {
-        val base = "Ты провер{ил|ила} ${n(r.checked, "тревогу", "тревоги", "тревог", "", "")}. Не сбыл${plural(r.not, "ась", "ись", "ись")} — ${r.not}."
-        g(if (r.came == 0) "$base Ни одна." else "$base Из сбывшихся с ${r.survived} из ${r.came} ты справил{ся|ась}. Это твоя статистика, не чужая.")
+        val base = "Ты провер{ил|ила} ${n(r.checked, "тревогу", "тревоги", "тревог", "", "")}. Не сбылось: ${r.not}."
+        g(if (r.came == 0) "$base Ни одной сбывшейся." else "$base Из сбывшихся ты справил{ся|ась} с ${r.survived} из ${r.came}. Это твоя статистика, не чужая.")
     } else {
         val base = "Of the ${r.checked} worries you checked, ${r.not} didn't come true."
         if (r.came == 0) "$base Not one." else "$base Of those that did, you got through ${r.survived} of ${r.came}. These are your numbers, nobody else's."

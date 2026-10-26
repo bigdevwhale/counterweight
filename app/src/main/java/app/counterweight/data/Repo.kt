@@ -26,7 +26,10 @@ class Repo(private val db: ChamberDb, val catalog: Catalog) {
     var clock: () -> Long = System::currentTimeMillis
     var zone: ZoneId = ZoneId.systemDefault()
 
-    suspend fun refresh(): State = State(dao.stones(), dao.laid(), dao.marks(), dao.engraved()).also { _state.value = it }
+    /** While true, changes aren't shown: the demo seed replays months without the screen flickering through them. */
+    @Volatile var hold = false
+
+    suspend fun refresh(): State = State(dao.stones(), dao.laid(), dao.marks(), dao.engraved()).also { if (!hold) _state.value = it }
 
     private suspend fun <T> op(block: suspend (State, Long) -> T): T = mutex.withLock {
         val s = refresh()

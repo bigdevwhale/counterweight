@@ -90,6 +90,11 @@ fun SettingsSheet(h: Home, onClose: () -> Unit) {
             }
         }
         Gap(10)
+        Card(onClick = { c.write { settings.update { it.copy(onboarded = false) } }; onClose() }) {
+            Text(w.t("Как это устроено", "How it works"), style = T.Heading)
+            Text(w.t("Пройти знакомство с палатой ещё раз ›", "Go through the welcome pages again ›"), style = T.Small.copy(color = C.wax))
+        }
+        Gap(10)
         CommunityLinks(w)
         Gap(10)
         Card {

@@ -73,7 +73,7 @@ fun StoneSheet(h: Home, id: Long, nav: Nav) {
             }
         }
         Text(h.title(st), style = T.Heading)
-        Text(w.t("Положен{|а} ", "Put down on ") + w.dateY(st.at.date(h.zone)) + " · " + w.t("тяжесть", "heft") + " ${st.heft}" + (st.after?.let { " → $it" } ?: ""), style = T.Small)
+        Text(w.t("Положен ", "Put down on ") + w.dateY(st.at.date(h.zone)) + " · " + w.t("тяжесть", "heft") + " ${st.heft}" + (st.after?.let { " → $it" } ?: ""), style = T.Small)
         st.worry?.let { _ ->
             Text(
                 if (polish >= Rules.PEBBLE) w.t("Эта тревога перевешена ${w.n(polish, "раз", "раза", "раз", "", "")} — камень стал галькой.", "This worry has been outweighed $polish times. The stone is a pebble now.")
@@ -146,7 +146,7 @@ fun WellSheet(h: Home, worry: String?, sphere: app.counterweight.domain.Sphere, 
             for ((i, step) in chain.take(depth).withIndex()) {
                 Column(Modifier.padding(start = (i * 14).dp, bottom = 8.dp)) {
                     if (i > 0) Text(w.t("и что тогда?", "and then what?"), style = T.Label.copy(color = C.brassDeep))
-                    Text(step, style = if (i == chain.lastIndex) T.BodyB else T.Body)
+                    Text(step.replaceFirstChar { it.uppercase() }, style = if (i == chain.lastIndex) T.BodyB else T.Body)
                 }
             }
             Gap(8)

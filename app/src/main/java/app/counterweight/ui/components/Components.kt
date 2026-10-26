@@ -23,7 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -49,6 +51,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.counterweight.ui.theme.C
 import app.counterweight.ui.theme.T
 import kotlinx.coroutines.delay
@@ -99,9 +102,16 @@ fun Btn(text: String, modifier: Modifier = Modifier, kind: Kind = Kind.BRASS, en
                 },
             )
             .clickable(enabled = enabled, onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 13.dp),
+            .height(50.dp)
+            .padding(horizontal = 12.dp),
         contentAlignment = Alignment.Center,
-    ) { Text(text.uppercase(), style = T.Button.copy(color = if (enabled) fg else C.muted), textAlign = TextAlign.Center) }
+    ) {
+        // Every button is one line and one height: a long label shrinks a little instead of wrapping.
+        BasicText(
+            text.uppercase(), style = T.Button.copy(color = if (enabled) fg else C.muted, textAlign = TextAlign.Center), maxLines = 1,
+            autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = T.Button.fontSize, stepSize = .5.sp),
+        )
+    }
 }
 
 @Composable

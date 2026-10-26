@@ -82,11 +82,16 @@ fun PickSheet(h: Home, nav: Nav) {
         }
         if (query.isBlank()) {
             Label(w.t("Или выбрать на полках", "Or pick from the shelves"))
-            Flow {
-                for (sp in Sphere.entries) Chip("${w.sphere(sp)} · ${h.catalog.worriesOf(sp).size}", sphere == sp) { sphere = if (sphere == sp) null else sp }
-            }
-            sphere?.let { sp ->
-                Gap(10)
+            val sp = sphere
+            if (sp == null) Flow {
+                for (x in Sphere.entries) Chip("${w.sphere(x)} · ${h.catalog.worriesOf(x).size}", false) { sphere = x }
+            } else {
+                // One shelf open: the others step aside so its worries start right here.
+                Flow {
+                    Chip(w.t("‹ все полки", "‹ all shelves"), false) { sphere = null }
+                    Chip("${w.sphere(sp)} · ${h.catalog.worriesOf(sp).size}", true) { sphere = null }
+                }
+                Gap(6)
                 for (wr in h.catalog.worriesOf(sp)) WorryRow(h, wr) { choose(wr) }
             }
         }

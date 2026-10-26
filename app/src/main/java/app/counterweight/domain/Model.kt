@@ -139,8 +139,9 @@ object Rules {
     /** What a stone weighs on the pan: a little more than its heft, so a light one still needs two weights. */
     fun mass(heft: Int) = heft * 2 + 1
 
-    /** Beam tilt for a difference of mass, in degrees; positive is the stone's side down. */
-    fun tilt(stone: Int, weights: Int): Float = ((stone - weights) * 2.2f).coerceIn(-14f, 14f)
+    /** Beam tilt for a difference of mass, in degrees; positive is the stone's side down. Once outweighed it clearly tips. */
+    fun tilt(stone: Int, weights: Int): Float =
+        if (weights > stone) -(6f + (weights - stone) * 1.5f).coerceAtMost(14f) else ((stone - weights) * 1.6f).coerceAtMost(14f)
 }
 
 class State(val stones: List<Stone>, val laid: List<Laid>, val marks: List<Mark>, val engraved: List<Engraved>) {

@@ -88,7 +88,7 @@ fun Onboarding(w: Words, settings: Settings) {
                         Text(line, style = body)
                     }
                 }
-                Text(w.t("Тысячи тревог и десятки тысяч гирек — без интернета, без рекламы, без аккаунта.", "Thousands of worries and tens of thousands of weights. No internet, no ads, no account."), style = T.Small.copy(color = C.chalkMuted))
+                Text(w.t("Больше тысячи тревог и почти шестнадцать тысяч гирек — без интернета, без рекламы, без аккаунта.", "Over a thousand worries and nearly sixteen thousand weights. No internet, no ads, no account."), style = T.Small.copy(color = C.chalkMuted))
             }
             else -> {
                 Text(w.t("Почти всё", "Almost there"), style = T.Title)

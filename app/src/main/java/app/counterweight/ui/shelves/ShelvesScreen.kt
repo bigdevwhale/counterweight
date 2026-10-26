@@ -90,7 +90,7 @@ private fun Shelf(h: Home, list: List<Stone>, nav: Nav) {
                 Column(Modifier.width(78.dp).clickable { nav.push(Overlay.StoneDetail(st.id)) }, horizontalAlignment = Alignment.CenterHorizontally) {
                     Canvas(Modifier.size(70.dp)) {
                         val look = h.look(st)
-                        val r = size.minDimension * (.18f + look.heft * .022f)
+                        val r = size.minDimension * (.24f + look.heft * .022f)
                         stone(look, Offset(size.width / 2, size.height - r * .8f), r)
                         // A wax dot: this stone has a day of checking ahead.
                         if (st.due != null && st.outcome == null) drawCircle(C.wax, 3.5f * density, Offset(size.width / 2 + r * .85f, size.height - r * 1.55f))

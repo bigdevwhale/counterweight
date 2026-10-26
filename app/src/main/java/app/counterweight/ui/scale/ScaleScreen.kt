@@ -10,6 +10,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -224,7 +226,8 @@ private fun Weighing(h: Home, nav: Nav, ses: Session, onSession: (Session?) -> U
         Canvas(Modifier.fillMaxWidth().weight(1f)) {
             scale(tilt.value, look, stoneIn.value, shown.map { it.kind }, lastIn.value, h.night)
         }
-        Column(Modifier.fillMaxWidth().navigationBarsPadding().clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)).paper().padding(16.dp)) {
+        // One height for every phase, so the scale above never jumps when the words below change.
+        Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)).paper().navigationBarsPadding().height(352.dp).padding(16.dp)) {
             when (ses.phase) {
                 Phase.HEFT -> Heft(h, ses, onSession, ::start)
                 Phase.WEIGH -> Reading(h, ses, shown.lastOrNull(), over, onNext = {
@@ -242,7 +245,7 @@ private fun Weighing(h: Home, nav: Nav, ses: Session, onSession: (Session?) -> U
 
 /** Before the stone goes down: how heavy is it? */
 @Composable
-private fun Heft(h: Home, ses: Session, onSession: (Session?) -> Unit, start: () -> Unit) {
+private fun ColumnScope.Heft(h: Home, ses: Session, onSession: (Session?) -> Unit, start: () -> Unit) {
     val w = h.w
     val c = LocalContext.current.container
     val toast = LocalToast.current
@@ -250,6 +253,7 @@ private fun Heft(h: Home, ses: Session, onSession: (Session?) -> Unit, start: ()
     Text("${ses.heft} · ${w.heft(ses.heft)}", style = T.Small)
     Slider(ses.heft.toFloat(), { onSession(ses.copy(heft = it.toInt().coerceIn(1, 10))) }, valueRange = 1f..10f, steps = 8,
         colors = SliderDefaults.colors(thumbColor = C.stoneDeep, activeTrackColor = C.stone, inactiveTrackColor = C.line, activeTickColor = C.paper, inactiveTickColor = C.muted))
+    Spacer(Modifier.weight(1f))
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         if (ses.stone == 0L) Btn(w.t("На полку до ${h.settings.worryHour.coerceAtLeast(0)}:00", "Shelve till ${h.settings.worryHour.coerceAtLeast(0)}:00"), Modifier.weight(1f), kind = BtnKind.GHOST) {
             val until = Bell.next(h.settings.worryHour.coerceAtLeast(0), System.currentTimeMillis(), h.zone)
@@ -263,10 +267,10 @@ private fun Heft(h: Home, ses: Session, onSession: (Session?) -> Unit, start: ()
 
 /** The weight just laid, its words, and what to do next. */
 @Composable
-private fun Reading(h: Home, ses: Session, cur: Shown?, over: Boolean, onNext: () -> Unit, onNotMine: (String) -> Unit, onDone: () -> Unit) {
+private fun ColumnScope.Reading(h: Home, ses: Session, cur: Shown?, over: Boolean, onNext: () -> Unit, onNotMine: (String) -> Unit, onDone: () -> Unit) {
     val w = h.w
     val c = LocalContext.current.container
-    if (cur == null) { Text(w.t("Кладу первую гирьку…", "Laying the first weight…"), style = T.Italic); Gap(60); return }
+    if (cur == null) { Text(w.t("Кладу первую гирьку…", "Laying the first weight…"), style = T.Italic); return }
     val kept = h.s.isKept(cur.key)
     Row(verticalAlignment = Alignment.CenterVertically) {
         WeightIcon(cur.kind, 34.dp)
@@ -275,12 +279,12 @@ private fun Reading(h: Home, ses: Session, cur: Shown?, over: Boolean, onNext: (
         Icon(if (kept) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder, w.t("В разновес", "Keep in the case"), tint = if (kept) C.wax else C.muted,
             modifier = Modifier.clip(RoundedCornerShape(20.dp)).clickable { c.write { repo.keep(cur.key, !kept) } }.padding(8.dp).size(22.dp))
     }
-    Column(Modifier.fillMaxWidth().height(170.dp).verticalScroll(rememberScrollState())) {
+    Column(Modifier.fillMaxWidth().weight(1f).verticalScroll(rememberScrollState())) {
         if (cur.kind == Kind.AFTER && cur.text.contains('→')) {
             for ((i, step) in cur.text.split('→').map { it.trim() }.withIndex()) {
                 Row(Modifier.padding(start = (i * 10).dp, top = 2.dp)) {
                     Text(if (i == 0) "▸ " else "↳ ", style = T.Body.copy(color = C.brassDeep))
-                    Text(step, style = T.Body)
+                    Text(step.replaceFirstChar { it.uppercase() }, style = T.Body)
                 }
             }
         } else Text(cur.text, style = T.Engraving)
@@ -291,27 +295,30 @@ private fun Reading(h: Home, ses: Session, cur: Shown?, over: Boolean, onNext: (
         style = T.Small.copy(color = C.wax), modifier = Modifier.padding(bottom = 8.dp))
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         if (cur.kind != Kind.LEDGER && !cur.key.startsWith("own:")) Btn(w.t("Не про меня", "Not for me"), Modifier.weight(1f), kind = BtnKind.GHOST) { onNotMine(cur.key) }
-        if (over) Btn(w.t("Ещё", "More"), Modifier.weight(.8f), kind = BtnKind.GHOST) { onNext() }
-        Btn(if (over) w.t("Снять камень", "Lift the stone") else w.t("Ещё гирьку", "Another weight"), Modifier.weight(1.3f), kind = if (over) BtnKind.WAX else BtnKind.BRASS) { if (over) onDone() else onNext() }
+        // «Another weight» never moves or changes meaning, so quick taps can't lift the stone by accident.
+        if (over) Btn(w.t("Снять камень", "Lift it"), Modifier.weight(1.1f), kind = BtnKind.WAX) { onDone() }
+        Btn(if (over) w.t("Ещё", "More") else w.t("Ещё гирьку", "Another weight"), Modifier.weight(if (over) .8f else 1.3f)) { onNext() }
     }
 }
 
 /** After the beam tipped: how heavy now, when it'll be known, and where the stone goes. */
 @Composable
-private fun Done(h: Home, nav: Nav, ses: Session, close: () -> Unit) {
+private fun ColumnScope.Done(h: Home, nav: Nav, ses: Session, close: () -> Unit) {
     val w = h.w
     val c = LocalContext.current.container
     val toast = LocalToast.current
     var after by remember { mutableIntStateOf((ses.heft / 2).coerceAtLeast(1)) }
     var due by remember { mutableStateOf<Int?>(7) }
+    Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
     Text(w.t("А теперь — насколько тяжело?", "And now, how heavy is it?"), style = T.Heading)
     Text("${ses.heft} → $after · ${if (after == 0) w.t("пух", "a feather") else w.heft(after)}", style = T.Small)
     Slider(after.toFloat(), { after = it.toInt() }, valueRange = 0f..10f, steps = 9,
         colors = SliderDefaults.colors(thumbColor = C.stoneDeep, activeTrackColor = C.stone, inactiveTrackColor = C.line, activeTickColor = C.paper, inactiveTickColor = C.muted))
     Text(w.t("Когда станет ясно, сбылось ли?", "When will you know if it came true?"), style = T.BodyB)
-    Flow(Modifier.padding(top = 6.dp, bottom = 12.dp)) {
+    Flow(Modifier.padding(top = 6.dp, bottom = 8.dp)) {
         for ((d, label) in listOf(1 to w.t("завтра", "tomorrow"), 3 to w.t("через 3 дня", "in 3 days"), 7 to w.t("через неделю", "in a week"), 30 to w.t("через месяц", "in a month"), null to w.t("не узнать", "can't tell")))
             Chip(label, due == d) { due = d }
+    }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Btn(w.t("Колодец", "The well"), Modifier.weight(1f), kind = BtnKind.GHOST) { nav.push(Overlay.Well(ses.worry, ses.sphere)) }

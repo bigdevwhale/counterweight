@@ -58,7 +58,7 @@ fun LedgerScreen(h: Home, nav: Nav) {
                 Label(w.t("Настал день узнать", "The day has come"), color = C.brassHi)
                 for (st in due) Card(Modifier.padding(bottom = 8.dp)) {
                     Text(h.title(st), style = T.BodyB)
-                    Text(w.t("Положен{|а} ", "Put down ") + w.date(st.at.date(h.zone)) + " · " + w.t("тяжесть", "heft") + " ${st.heft}", style = T.Small)
+                    Text(w.t("Положен ", "Put down ") + w.date(st.at.date(h.zone)) + " · " + w.t("тяжесть", "heft") + " ${st.heft}", style = T.Small)
                     Gap(4)
                     Text(w.t("Ну что — сбылось?", "So, did it happen?"), style = T.Body)
                     Flow(Modifier.padding(top = 6.dp)) {
